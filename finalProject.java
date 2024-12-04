@@ -6,8 +6,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class finalProject here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Talmage McGehee and Micheal Gavina
  */
 public class finalProject{
 
@@ -22,7 +21,6 @@ public static void bag(){
 
 
 public static void combat(){
-    
     
     
 }
@@ -54,17 +52,14 @@ public static void main(String args[]) throws IOException{
     
     String userPath;
     
-    
-    
-    
-    
-    
-    
-    
     FileInputStream itemFile = new FileInputStream("itemFile.txt");
     Scanner fileRead = new Scanner(itemFile);
     System.out.println("Hello adventurer! You are on a mightly quest to save the world! However, first you must pick a path; there are three diverging paths ahead, one forward, one to the right, and one to the left.");
     userPath = scnr.next();
+
+    while (){
+
+    }
         
         
         
