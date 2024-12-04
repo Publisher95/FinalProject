@@ -16,7 +16,7 @@ public static int heal(){
 }
 
 public static void checkBag(String[] bagItemNames, int[] bagItemStat){
-    for(int i = 0; i < bagItemNames.length(); i++){
+    for(int i = 0; i < bagItemNames.length; i++){
         while(bagItemNames[i] != null){
             System.out.println(i+1 + ". " + bagItemNames[i] + "\t" + bagItemStat[i]);
         }
