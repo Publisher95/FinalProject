@@ -52,7 +52,7 @@ public static void main(String args[]) throws IOException{
     
     String userPath;
     
-    FileInputStream itemFile = new FileInputStream("itemFile.txt");
+    FileInputStream itemFile = new FileInputStream("potionFile.txt");
     Scanner fileRead = new Scanner(itemFile);
     System.out.println("Hello adventurer! You are on a mightly quest to save the world! However, first you must pick a path; there are three diverging paths ahead, one forward, one to the right, and one to the left.");
     userPath = scnr.next();
