@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Write a description of class finalProject here.
+ * Try and make dungeon crawling like game
  *
  * @author Talmage McGehee and Micheal Gavina
  */
