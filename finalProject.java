@@ -24,7 +24,7 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 }
 
 
-public static void combat(){
+public static void encounter(){
     
     
 }
@@ -56,6 +56,10 @@ public static void main(String args[]) throws IOException{
     final int BAG_SIZE = 10;
     String[] bagItemNames = new String[BAG_SIZE];
     int[] bagItemStat = new int[BAG_SIZE];
+    int health, defense, mana, gold;
+    int currentPhyDam, currentMagDam;
+    String currentPhyName, currentMagName;
+    
     
     ArrayList<String> potionName = new ArrayList<String>();
     ArrayList<Integer> potionStat = new ArrayList<Integer>();
@@ -74,6 +78,11 @@ public static void main(String args[]) throws IOException{
     FileInputStream manaFile = new FileInputStream("manaFile.txt");
     Scanner manaRead = new Scanner(manaFile);
     
+    
+    health = 50;
+    defense = 0;
+    mana = 15;
+    gold = 0;
     
     System.out.println("Hello adventurer! You are on a mightly quest to save the world! However, first you must pick a path; there are three diverging paths ahead, one forward, one to the right, and one to the left.");
     userPath = scnr.next();
