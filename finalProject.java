@@ -11,9 +11,25 @@ import java.util.Random;
  */
 public class finalProject{
 
-public static int heal(int health, int potionStat){
+public static void heal(int health, int potionStat){
+    /*Might redo how this is set up
+     *  changed it from int to void.
+     * 
+     */
     
-    return 0;
+    
+    
+    
+}
+
+
+public static void battle(int enemyHealth, int enemyAtk, int enemyDef){
+    /* need to pull the player attack and player defense aswell as program the magic and physical damages
+     * Need to do. 
+     * 
+     * 
+     */
+    
 }
 
 public static void checkBag(String[] bagItemNames, int[] bagItemStat){
@@ -26,30 +42,51 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 }
 
 
-public static void encounter(int[][] enemies, String[] name){
+public static void encounter(int[][] enemies, String[] name, int[] playerStats){
     Random rand = new Random();
     Scanner inReader = new Scanner(System.in);
-    int randomNum = rand.nextInt(0,2);
+    int randomNum = rand.nextInt(0,2); // selects on of the three enemies
     String monsterName = name[randomNum];
     int monsterAtk = enemies[randomNum][0];
-    int monsterDef = enemies[randomNum][1];
+    int monsterDef = enemies[randomNum][1]; //selecting one of the three enemies
+    int monsterHealth = rand.nextInt(5, 25); // randomly assigns health
+   
+    
+    
+    
     
     System.out.printf("You have encountered a %s with %d attack and %d defense\n", monsterName, monsterAtk, monsterDef);
     System.out.println("Would you like to do?\nFight, Bag, or Run.");
-    
+    String choice;
+    choice = inReader.next(); //not sure why choice needs to be here, might be a bug later on
     boolean validChoice = false;
     while (validChoice == false){
-        String choice = inReader.next();
         if((choice.toUpperCase()).equals("FIGHT") || (choice.toUpperCase()).equals("BAG") || (choice.toUpperCase()).equals("RUN")){
             validChoice = true;
         }
         else{
-        System.out.println("This is not a vaild choice.");
+            System.out.println("This is not a vaild choice.");
+            choice = inReader.next();
+        }
+    }
+    while(playerStats[0] > 0 && enemyHealth > 0){
+        if((choice.toUpperCase()).equals("BAG")){
+            checkBag();  // fixme
+            
+            
+        }
+        else if ((choice.toUpperCase()).equals("FIGHT")){
+            battle(); 
+            
+        }
+        else if ((choice.toUpperCase()).equals("RUN")){
+            
+            
         }
     }
 }
     
-    
+    // This is going to be a bitch to debug, RIP sleep
     
 public static int recursionSpell(int damageLevel, int baseDamage){
     int recDam = baseDamage;
@@ -81,7 +118,7 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("You have chosen the " + userPath + " path, let us begin");
 }
 
-public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName){
+public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats){
     int roomLength = 100;
     int maxEncounter = 10;
     int stepCount = 0;
@@ -101,22 +138,22 @@ public static int campainStart(int bossKillCount, int[][] enemies, String[] enem
         if (encounterTile == stepCount && encounterCount < maxEncounter){
             System.out.print("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
             System.out.println(" defeat the boss, when you encounter a random enemy in your way");
-            encounter(enemies, enemyName);
+            encounter(enemies, enemyName, playerStats);
             
             encounterCount += 1;
             encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
             System.out.println("encounterTile: " + encounterTile);
         }
         stepCount += 1;
+        if(playerStats[0] <= 0 ){
+            return 0;
+        }
     }
-    
-
-    
     return 1;
 }
 
     
-    
+    //To-do: write more comments
     
     
 public static void main(String args[]) throws IOException{
@@ -158,8 +195,14 @@ public static void main(String args[]) throws IOException{
     Scanner manaRead = new Scanner(manaFile);
     
     
+    int[] playerStats = new int[4]; //Health, defense, mana, and gold. 
+    playerStats[0] = 50;
+    playerStats[1] = 0;
+    playerStats[2] = 15;
+    playerStats[3] = 0;
     
-    health = 50;
+    
+    health = 50; // these are redunate but had them for referencing
     defense = 0;
     mana = 15;
     gold = 0;
@@ -193,9 +236,16 @@ public static void main(String args[]) throws IOException{
     
     while (bossKillCount < 3){
         
-        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName);
+        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats);
+        if (playerStats[0] <= 0){
+            System.out.println("You have failed to kill all three bosses and the final boss.\n You have been slain.");
+            break;
+        }
         int healthIncrease = bossKillCount * health;
         health += healthIncrease;
+    }
+    if(bossKillCount == 3){
+        System.out.println("You have succeded on your quest! I hope you had fun!");
     }
   }
 }
