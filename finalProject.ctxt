@@ -1,14 +1,18 @@
 #BlueJ class context
 comment0.target=finalProject
 comment0.text=\r\n\ Try\ and\ make\ dungeon\ crawling\ like\ game\r\n\r\n\ @author\ Talmage\ McGehee\ and\ Micheal\ Gavina\r\n
-comment1.params=
-comment1.target=int\ heal()
+comment1.params=health\ potionStat
+comment1.target=int\ heal(int,\ int)
 comment2.params=bagItemNames\ bagItemStat
 comment2.target=void\ checkBag(java.lang.String[],\ int[])
-comment3.params=
-comment3.target=void\ encounter()
+comment3.params=steps
+comment3.target=void\ encounter(int)
 comment4.params=damageLevel\ baseDamage
 comment4.target=int\ recursionSpell(int,\ int)
-comment5.params=args
-comment5.target=void\ main(java.lang.String[])
-numComments=6
+comment5.params=pathChoices\ scnr
+comment5.target=void\ pathChoosing(char[],\ java.util.Scanner)
+comment6.params=bossKillCount
+comment6.target=int\ campainStart(int)
+comment7.params=args
+comment7.target=void\ main(java.lang.String[])
+numComments=8

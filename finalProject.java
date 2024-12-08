@@ -26,11 +26,14 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 }
 
 
-public static void encounter(int steps){
-    for(int i = 0; i < steps; i++){
-     
-        
-    }
+public static void encounter(int[][] enemies, ){
+    Random rand = new Random();
+    int randomNum = rand.nextInt(0,2);
+    
+    
+    
+    
+    
 }
     
     
@@ -85,11 +88,13 @@ public static int campainStart(int bossKillCount){
         if (encounterTile == stepCount && encounterCount < maxEncounter){
             System.out.println("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
             System.out.println("defeat the boss, when you encounter a random enemy in your way");
+            
             encounterCount += 1;
             encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
         }
         stepCount += 1;
     }
+    
 
     
     return 1;
@@ -121,7 +126,14 @@ public static void main(String args[]) throws IOException{
     ArrayList<Integer> manaCost = new ArrayList<Integer>();
    
     String[] enemiesName = {"skeleton", "goblin", "orge"};
-    int[][] enemiesStats = {1, 3} , {2, 1}, {3, 1}; // This is the stats of the enemies, which will go skeleton, goblin, and orge.
+    int[][] enemiesStats = new int[3][2]; // This is the stats of the enemies, which will go skeleton, goblin, and orge. Read like row for each enemy and coulum for stats: 1st for damage, 2nd for defense.
+    
+    enemiesStats[0][0] = 1;
+    enemiesStats[0][1] = 3;
+    enemiesStats[1][0] = 1;
+    enemiesStats[1][1] = 2;
+    enemiesStats[2][0] = 4;
+    enemiesStats[2][1] = 0;
     
     FileInputStream potionFile = new FileInputStream("potionFile.txt");
     Scanner potionRead = new Scanner(potionFile);
@@ -158,6 +170,11 @@ public static void main(String args[]) throws IOException{
         manaStat.add(manaRead.nextInt());
         manaCost.add(manaRead.nextInt());
     }
+    
+    System.out.println("As you travel this path, you might run into many things");
+    
+    
+    
     
     while (bossKillCount < 3){
         
