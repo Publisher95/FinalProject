@@ -28,7 +28,7 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 
 public static void encounter(int steps){
     for(int i = 0; i < steps; i++){
-        
+     
         
     }
 }
@@ -119,7 +119,9 @@ public static void main(String args[]) throws IOException{
     ArrayList<String> manaName = new ArrayList<String>();
     ArrayList<Integer> manaStat = new ArrayList<Integer>();
     ArrayList<Integer> manaCost = new ArrayList<Integer>();
-    
+   
+    String[] enemiesName = {"skeleton", "goblin", "orge"};
+    int[][] enemiesStats = {1, 3} , {2, 1}, {3, 1}; // This is the stats of the enemies, which will go skeleton, goblin, and orge.
     
     FileInputStream potionFile = new FileInputStream("potionFile.txt");
     Scanner potionRead = new Scanner(potionFile);
@@ -163,5 +165,5 @@ public static void main(String args[]) throws IOException{
         int healthIncrease = bossKillCount * health;
         health += healthIncrease;
     }
-}
+  }
 }
