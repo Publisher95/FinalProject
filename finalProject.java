@@ -26,14 +26,27 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 }
 
 
-public static void encounter(int[][] enemies, ){
+public static void encounter(int[][] enemies, String[] name){
     Random rand = new Random();
+    Scanner inReader = new Scanner(System.in);
     int randomNum = rand.nextInt(0,2);
+    String monsterName = name[randomNum];
+    int monsterAtk = enemies[randomNum][0];
+    int monsterDef = enemies[randomNum][1];
     
+    System.out.printf("You have encountered a %s with %d attack and %d defense\n", monsterName, monsterAtk, monsterDef);
+    System.out.println("Would you like to do?\nFight, Bag, or Run.");
     
-    
-    
-    
+    boolean validChoice = false;
+    while (validChoice == false){
+        String choice = inReader.next();
+        if((choice.toUpperCase()).equals("FIGHT") || (choice.toUpperCase()).equals("BAG") || (choice.toUpperCase()).equals("RUN")){
+            validChoice = true;
+        }
+        else{
+        System.out.println("This is not a vaild choice.");
+        }
+    }
 }
     
     
@@ -68,7 +81,7 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("You have chosen the " + userPath + " path, let us begin");
 }
 
-public static int campainStart(int bossKillCount){
+public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName){
     int roomLength = 100;
     int maxEncounter = 10;
     int stepCount = 0;
@@ -86,11 +99,13 @@ public static int campainStart(int bossKillCount){
     System.out.println("encounterTile: " + encounterTile);
     while(stepCount < roomLength){
         if (encounterTile == stepCount && encounterCount < maxEncounter){
-            System.out.println("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
-            System.out.println("defeat the boss, when you encounter a random enemy in your way");
+            System.out.print("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
+            System.out.println(" defeat the boss, when you encounter a random enemy in your way");
+            encounter(enemies, enemyName);
             
             encounterCount += 1;
             encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
+            System.out.println("encounterTile: " + encounterTile);
         }
         stepCount += 1;
     }
@@ -178,7 +193,7 @@ public static void main(String args[]) throws IOException{
     
     while (bossKillCount < 3){
         
-        bossKillCount += campainStart(bossKillCount);
+        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName);
         int healthIncrease = bossKillCount * health;
         health += healthIncrease;
     }
