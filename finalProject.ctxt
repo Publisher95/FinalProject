@@ -1,12 +1,12 @@
 #BlueJ class context
 comment0.target=finalProject
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ finalProject\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment0.text=\r\n\ Try\ and\ make\ dungeon\ crawling\ like\ game\r\n\r\n\ @author\ Talmage\ McGehee\ and\ Micheal\ Gavina\r\n
 comment1.params=
 comment1.target=int\ heal()
-comment2.params=
-comment2.target=void\ bag()
+comment2.params=bagItemNames\ bagItemStat
+comment2.target=void\ checkBag(java.lang.String[],\ int[])
 comment3.params=
-comment3.target=void\ combat()
+comment3.target=void\ encounter()
 comment4.params=damageLevel\ baseDamage
 comment4.target=int\ recursionSpell(int,\ int)
 comment5.params=args

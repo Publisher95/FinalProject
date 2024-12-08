@@ -24,9 +24,11 @@ public static void checkBag(String[] bagItemNames, int[] bagItemStat){
 }
 
 
-public static void encounter(){
-    
-    
+public static void encounter(int steps){
+    for(int i = 0; i < steps; i++){
+        
+        
+    }
 }
     
     
