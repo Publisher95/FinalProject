@@ -23,7 +23,9 @@ public static void heal(int[] playerStat, String[] bagName, int[] bagStat, Strin
     else if (userItem.toLowerCase().equals("magicpotion")){
         playerHeal = 2;
     }
-    
+    else{
+        playerHeal = -1;
+    }
     while(bagName[i] != null){
         if(userItem.toLowerCase().equals(bagName[i].toLowerCase())){
             playerStat[playerHeal] += bagStat[i];
@@ -35,13 +37,12 @@ public static void heal(int[] playerStat, String[] bagName, int[] bagStat, Strin
 
 public static void checkBag(String[] bagItemNames, int[] bagItemStat){
     int i = 0;
-    
-    while(bagItemNames[i] != null){
-        System.out.println(i+1 + ". " + bagItemNames[i] + "\t" + bagItemStat[i]);
-        i += 1;
-    }
+    for(i = 0; i < bagItemNames.length; i++){
+        if(bagItemNames[i] != null){
+            System.out.println(i+1 + "." + bagItemNames[i] + "\t" + bagItemStat[i]);
+        }
+    }  
 }
-
 
 public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] playerStats, String phyName, String magName){
     Scanner inReader = new Scanner(System.in);
@@ -54,9 +55,18 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
     System.out.print("Would you like physical or magic?");
     
     choice = inReader.next();
-    while (((choice.toUpperCase())).equals("PHYSICAL") || ((choice.toUpperCase()).equals("MAGIC"))){
+    boolean validChoice = false;
+
+    if((choice.toUpperCase()).equals("PHYSICAL") || (choice.toUpperCase().equals("MAGIC"))){
+        validChoice = true;
+    }
+
+    while (validChoice == false){
         System.out.println("That is not a vaild choice");
         choice = inReader.next();
+        if((choice.toUpperCase()).equals("PHYSICAL") || (choice.toUpperCase().equals("MAGIC"))){
+            validChoice = true;
+        }
     }
  
     if (((choice.toUpperCase()).equals("PHYSICAL"))){
@@ -156,13 +166,25 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
     while(playerStats[0] > 0 && monsterHealth > 0){
         if((choice.toUpperCase()).equals("BAG")){
             checkBag(bagName, bagStats);
-            
-            
+            System.out.println("Would you like to use any items? (Type none for no items)");
+            String userItem = inReader.next();
+            while(true){
+                if ((userItem.toUpperCase().equals("MAGICPOTION")) || (userItem.toUpperCase().equals("HEALTHPOTION")) || (userItem.toUpperCase().equals("NONE"))){
+                    break;    
+                }
+                else{
+                    System.out.println("That is not a vaild answer.");
+                    userItem = inReader.next();
+                }
+            }      
+            heal(playerStats, bagName, bagStats, userItem);
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            choice = inReader.next();
         }
         else if ((choice.toUpperCase()).equals("FIGHT")){
             monsterHealth = battle(monsterHealth, monsterAtk, monsterDef, playerStats, phyName, magName);
-
-
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            choice = inReader.next();
         }
         else if ((choice.toUpperCase()).equals("RUN")){
             int dice = rand.nextInt(1,6);
@@ -171,9 +193,15 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
                 break;
             }
             else{
-                System.out.println("You didn't get away.");
-
+                System.out.println("You didn't get away.\n");
+                System.out.println("Would you like to do?\nFight, Bag, or Run.");
+                System.out.println("Would you like to do?\nFight, Bag, or Run.");
+                choice = inReader.next();
             }
+        }
+        else{
+            System.out.println("This is not a vaild choice.");
+            choice = inReader.next();
         }
     }
 }
@@ -203,7 +231,7 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("  (Answer: Forward, Right, or Left(only first letter matters))");
     userPath = scnr.next();
     
-    while(userPath.charAt(0) != pathChoices[0] && userPath.charAt(0) != pathChoices[1] && userPath.charAt(0) != pathChoices[2]){
+     while(userPath.toLowerCase().charAt(0) != pathChoices[0] && userPath.toLowerCase().charAt(0) != pathChoices[1] && userPath.toLowerCase().charAt(0) != pathChoices[2]){
         System.out.println("That is not one of the path options, try again");
         userPath = scnr.next();
     }
@@ -280,7 +308,7 @@ public static void main(String args[]) throws IOException{
     ArrayList<Integer> manaStat = new ArrayList<Integer>();
     ArrayList<Integer> manaCost = new ArrayList<Integer>();
    
-    String[] enemiesName = {"skeleton", "goblin", "orge"};
+    String[] enemiesName = {"skeleton", "goblin", "ogre"};
     int[][] enemiesStats = new int[3][2]; // This is the stats of the enemies, which will go skeleton, goblin, and orge. Read like row for each enemy and coulum for stats: 1st for damage, 2nd for defense.
     currentPhyName = "Knife";
     currentMagName = "wand";
@@ -341,8 +369,14 @@ public static void main(String args[]) throws IOException{
     }
     
     System.out.println("As you travel this path, you might run into many things");
-    System.out.printf("On your person you have a %s for physical damage, and %s for magic damage.\nPhysical damage is weaker overall, but hits more in defense, Magic damage does more overall, but hits weaker in defense.",currentPhyName, currentMagName);
+    System.out.printf("On your person you have a %s for physical damage, and %s for magic damage.\nPhysical damage is weaker overall, but hits more in defense, Magic damage does more overall, but hits weaker in defense.\n",currentPhyName, currentMagName);
     
+    
+    bagItemNames[0] = potionName.get(0);
+    bagItemNames[1] = potionName.get(1);
+
+    bagItemStat[0] = potionStat.get(0);
+    bagItemStat[1] = potionStat.get(1);
     
     
     while (bossKillCount < 3){
