@@ -35,8 +35,41 @@ public static void heal(int[] playerStat, String[] bagName, int[] bagStat, Strin
     }
 }
 
+public static void looting(int[] playerStats, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> physName, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost){
+    Random rand = new Random();
+    Scanner input = new Scanner(System.in);
+    int randNum = rand.nextInt(2);
+    String choice;
+    
+    if(randNum == 0){
+        randNum = rand.nextInt(potionName.size());
+    }else if(randNum == 1){
+        randNum = rand.nextInt(physName.size());
+        
+        System.out.println("You have found a " + physName.get(randNum) + " on the ground, that does " + physDam.get(randNum) + ". Will you replace your current physical weapon with it?\n(Yes or No)");
+        choice = input.next();
+        
+        if(choice.toLowerCase().charAt(0) == 'y'){
+            playerStats[5] = magDam.get(randNum);
+        }
+    }else{
+        randNum = rand.nextInt(magNames.size());
+        
+        System.out.println("You have found a " + magNames.get(randNum) + " on the ground, that does " + magDam.get(randNum) + " that costs " + magCost.get(randNum) + ". Will you replace your current magic weapon with it?\n(Yes or No)");
+        choice = input.next();
+        
+        if(choice.toLowerCase().charAt(0) == 'y'){
+            playerStats[6] = magDam.get(randNum);
+            playerStats[7] = magCost.get(randNum);
+        }
+    }
+}
+
 public static void checkBag(String[] bagItemNames, int[] bagItemStat){
     int i = 0;
+    
+    System.out.println();
+    
     for(i = 0; i < bagItemNames.length; i++){
         if(bagItemNames[i] != null){
             System.out.println(i+1 + "." + bagItemNames[i] + "\t" + bagItemStat[i]);
@@ -137,6 +170,7 @@ public static void boss(int bossHealth, int bossDef, int[] playerStats, int[] ba
 
 
 public static void encounter(int[][] enemies, String[] nameMonster, int[] playerStats, String[] bagName, int[] bagStats, String phyName, String magName){
+    System.out.println("Encounter triggered");
     Random rand = new Random();
     Scanner inReader = new Scanner(System.in);
     int randomNum = rand.nextInt(0,2); // selects on of the three enemies
@@ -144,7 +178,7 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
     int monsterAtk = enemies[randomNum][0];
     int monsterDef = enemies[randomNum][1]; //selecting one of the three enemies
     int monsterHealth = rand.nextInt(5, 25); // randomly assigns health
-   
+    
     
     
     
@@ -183,6 +217,8 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
         }
         else if ((choice.toUpperCase()).equals("FIGHT")){
             monsterHealth = battle(monsterHealth, monsterAtk, monsterDef, playerStats, phyName, magName);
+            System.out.println("The monster is down to " + monsterHealth);
+            
             System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
             choice = inReader.next();
         }
@@ -238,43 +274,65 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("You have chosen the " + userPath + " path, let us begin");
 }
 
-public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, int[] bagStats, String[] bagName, String phyName, String magName){
+public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, int[] bagStats, String[] bagName, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> physName, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost){
     int roomLength = 100;
     int maxEncounter = 10;
     int stepCount = 0;
     int encounterCount = 0;
     int encounterTile;
     Random rand = new Random();
+    int bossHealth = 50;
+    int bossDef = 3;
+    int lootTile;
+    int maxLoots = 7;
+    int lootCount = 0;
+    int maxRuns = playerStats[4];
+    //Health, defense, mana, gold, runLimit, physical, magic damage, and magic cost
     
-    
+
     
     if(bossKillCount != 0){
-        roomLength += (roomLength * 3/4) * bossKillCount;
+        roomLength += (roomLength * 3/4.0) * bossKillCount;
         maxEncounter += (maxEncounter * 3/4.0) * bossKillCount;
+        maxLoots += (maxLoots * 3/4.0) * bossKillCount;
+        bossHealth += (bossHealth * 1/2.0) * bossKillCount;
+        bossDef += (bossDef * playerStats[5]/8.0);
+        maxRuns += (maxRuns * 3/4.0) * bossKillCount; 
     }
+    
     encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
-    System.out.println("encounterTile: " + encounterTile);
+    lootTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
+    System.out.println("Encounter tile: " + encounterTile);
+    
     while(stepCount < roomLength){
         if (encounterTile == stepCount && encounterCount < maxEncounter){
             System.out.print("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
             System.out.println(" defeat the boss, when you encounter a random enemy in your way");
+            System.out.println("Trigger the encounter");
             encounter(enemies, enemyName, playerStats, bagName, bagStats, phyName, magName);
             
             encounterCount += 1;
             encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
             System.out.println("encounterTile: " + encounterTile);
         }
+        
+        if(lootTile == stepCount && lootCount < maxLoots){
+            looting(playerStats, phyName, magName, potionName, potionStat, physName, physDam, magNames, magDam, magCost);
+        }
+        
         stepCount += 1;
         if(playerStats[0] <= 0 ){
             return 0;
-        }     
+        }  
+        
+        boss(bossHealth, bossDef, playerStats, bagStats, bagName, phyName, magName);
     }
     return 1;
 }
 
 
 public static void finalBoss(){
-    System.out.println("Upon beating the three bosses, you have now been summoned to the Big Bad, the evil that rules over this land.\n However, in your travels you have learned a powerful spell that can destroy any evil.");
+    System.out.println("Upon beating the three bosses, you have now been summoned to the Big Bad, the evil that rules over this land.\nHowever, in your travels you have learned a powerful spell that can destroy any evil.");
     System.out.println("The spell that builds upon it's self to vanquish any evil, The Light Spell.");
     System.out.println("This boss appears to have a lot of defense and a lot health, but it will be no match for The Light Spell.");
     
@@ -332,14 +390,7 @@ public static void main(String args[]) throws IOException{
     Scanner manaRead = new Scanner(manaFile);
     
     
-    int[] playerStats = new int[7]; //Health, defense, mana, and gold, level, physical, and magic damage
-    playerStats[0] = 50;
-    playerStats[1] = 0;
-    playerStats[2] = 15;
-    playerStats[3] = 0;
-    playerStats[4] = 4;
-    playerStats[5] = 2;
-    playerStats[6] = 5;
+    int[] playerStats = new int[8]; 
     
     health = 50; // these are redunate but had them for referencing
     defense = 0;
@@ -378,24 +429,32 @@ public static void main(String args[]) throws IOException{
     bagItemStat[0] = potionStat.get(0);
     bagItemStat[1] = potionStat.get(1);
     
+    //Health, defense, mana, gold, runLimit, physical, magic damage, and magic cost
+    playerStats[0] = 50;
+    playerStats[1] = 0;
+    playerStats[2] = 15;
+    playerStats[3] = 0;
+    playerStats[4] = 4;
+    playerStats[5] = physicalStat.get(0);
+    playerStats[6] = manaStat.get(0);
+    playerStats[7] = manaCost.get(0);
+    
+    
     
     while (bossKillCount < 3){
-        
-        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStat, bagItemNames, currentPhyName, currentMagName);
+        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStat, bagItemNames, currentPhyName, currentMagName, potionName, potionStat, physicalName, physicalStat, manaName, manaStat, manaCost);
         if (playerStats[0] <= 0){
             System.out.println("You have failed to kill all three bosses and the final boss.\n You have been slain.");
             break;
         }
-        int healthIncrease = bossKillCount * health;
-        health += healthIncrease;
+        int healthIncrease = bossKillCount * playerStats[0];
+        playerStats[0] += healthIncrease;
     }
-    
-    
     
     
     if(bossKillCount == 3){
         finalBoss();
-        System.out.println("You have succeded on your quest! I hope you had fun!");
+        System.out.println("\nYou have succeded on your quest! I hope you had fun!\n");
     }
   }
 }
