@@ -1,2 +1,6 @@
 knife 3
+longSword 13
+aFuckingGun 50
+axeDeThrow 25
+aBowIGuess 20
 sword 7
