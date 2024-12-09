@@ -13,6 +13,7 @@ public class finalProject{
 
 public static void heal(int[] playerStat, String[] bagName, int[] bagStat){
 
+    
 
 //Todo, fix this
 
@@ -20,10 +21,12 @@ public static void heal(int[] playerStat, String[] bagName, int[] bagStat){
 
 public static void checkBag(String[] bagItemNames, int[] bagItemStat){
     int i = 0;
+    System.out.println();
     
-    while(bagItemNames[i] != null){
-        System.out.println(i+1 + ". " + bagItemNames[i] + "\t" + bagItemStat[i]);
-        i += 1;
+    for(i = 0; i < bagItemNames.length; i++){
+        if(bagItemNames[i] != null){
+            System.out.println(i+1 + "." + bagItemNames[i] + "\t" + bagItemStat[i]);
+        }
     }
 }
 
@@ -36,18 +39,30 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
     System.out.print("Would you like physical or magic?");
     
     choice = inReader.next();
-    while (((choice.toUpperCase())).equals("PHYSICAL") || ((choice.toUpperCase()).equals("MAGIC"))){
+    boolean validChoice = false;
+    
+    if((choice.toUpperCase()).equals("PHYSICAL") || (choice.toUpperCase().equals("MAGIC"))){
+        validChoice = true;
+    }
+    
+    while (validChoice == false){
         System.out.println("That is not a vaild choice");
         choice = inReader.next();
+        if((choice.toUpperCase()).equals("PHYSICAL") || (choice.toUpperCase().equals("MAGIC"))){
+            validChoice = true;
+        }
     }
  
     if (((choice.toUpperCase()).equals("PHYSICAL"))){
+        System.out.println("Physical used");
         
         
     }
     
     else if (((choice.toUpperCase()).equals("MAGIC"))){
+        System.out.println("Magic used");
         
+        //enemyHealth -= magic;
         
     }
 
@@ -130,12 +145,14 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
         if((choice.toUpperCase()).equals("BAG")){
             checkBag(bagName, bagStats);
             
-            
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            choice = inReader.next();
         }
         else if ((choice.toUpperCase()).equals("FIGHT")){
             monsterHealth = battle(monsterHealth, monsterAtk, monsterDef, playerStats);
-
-
+            
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            choice = inReader.next();
         }
         else if ((choice.toUpperCase()).equals("RUN")){
             int dice = rand.nextInt(1,6);
@@ -144,9 +161,14 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
                 break;
             }
             else{
-                System.out.println("You didn't get away.");
+                System.out.println("You didn't get away.\n");
+                System.out.println("Would you like to do?\nFight, Bag, or Run.");
+                choice = inReader.next();
 
             }
+        }else{
+            System.out.println("This is not a vaild choice.");
+            choice = inReader.next();
         }
     }
 }
@@ -176,14 +198,14 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("  (Answer: Forward, Right, or Left(only first letter matters))");
     userPath = scnr.next();
     
-    while(userPath.charAt(0) != pathChoices[0] && userPath.charAt(0) != pathChoices[1] && userPath.charAt(0) != pathChoices[2]){
+    while(userPath.toLowerCase().charAt(0) != pathChoices[0] && userPath.toLowerCase().charAt(0) != pathChoices[1] && userPath.toLowerCase().charAt(0) != pathChoices[2]){
         System.out.println("That is not one of the path options, try again");
         userPath = scnr.next();
     }
     System.out.println("You have chosen the " + userPath + " path, let us begin");
 }
 
-public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, int[] bagStats, String[] bagName){
+public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, int[] bagStats, String[] bagName, String currentPhyName, String currentMagName, int currentPhyDam, int currentMagDam){
     int roomLength = 100;
     int maxEncounter = 10;
     int stepCount = 0;
@@ -198,7 +220,7 @@ public static int campainStart(int bossKillCount, int[][] enemies, String[] enem
         maxEncounter += (maxEncounter * 3/4.0) * bossKillCount;
     }
     encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
-    System.out.println("encounterTile: " + encounterTile);
+    
     while(stepCount < roomLength){
         if (encounterTile == stepCount && encounterCount < maxEncounter){
             System.out.print("You travel " + stepCount + " out of the " + roomLength + " you have been tasked with to");
@@ -241,7 +263,7 @@ public static void main(String args[]) throws IOException{
     ArrayList<Integer> manaStat = new ArrayList<Integer>();
     ArrayList<Integer> manaCost = new ArrayList<Integer>();
    
-    String[] enemiesName = {"skeleton", "goblin", "orge"};
+    String[] enemiesName = {"skeleton", "goblin", "ogre"};
     int[][] enemiesStats = new int[3][2]; // This is the stats of the enemies, which will go skeleton, goblin, and orge. Read like row for each enemy and coulum for stats: 1st for damage, 2nd for defense.
     currentPhyName = "Knife";
     currentMagName = "wand";
@@ -273,6 +295,8 @@ public static void main(String args[]) throws IOException{
     playerStats[4] = 4;
     
     
+    
+    
     health = 50; // these are redunate but had them for referencing
     defense = 0;
     mana = 15;
@@ -301,13 +325,17 @@ public static void main(String args[]) throws IOException{
     }
     
     System.out.println("As you travel this path, you might run into many things");
-    System.out.printf("On your person you have a %s for physical damage, and %s for magic damage.\nPhysical damage is weaker overall, but hits more in defense, Magic damage does more overall, but hits weaker in defense.",currentPhyName, currentMagName);
+    System.out.printf("On your person you have a %s for physical damage, and %s for magic damage.\nPhysical damage is weaker overall, but hits more in defense, Magic damage does more overall, but hits weaker in defense.\n",currentPhyName, currentMagName);
     
+    bagItemNames[0] = potionName.get(0);
+    bagItemNames[1] = potionName.get(1);
     
+    bagItemStat[0] = potionStat.get(0);
+    bagItemStat[1] = potionStat.get(1);
     
     while (bossKillCount < 3){
         
-        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStat, bagItemNames);
+        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStat, bagItemNames, currentPhyName, currentMagName, currentPhyDam, currentMagDam);
         if (playerStats[0] <= 0){
             System.out.println("You have failed to kill all three bosses and the final boss.\n You have been slain.");
             break;
