@@ -11,71 +11,79 @@ import java.util.Random;
  */
 public class finalProject{
 
-public static void heal(int[] playerStat, String[] bagName, int[] bagStat, String userItem){
+public static void heal(int[] playerStat, ArrayList<String> bagName, ArrayList<Integer> bagStat, String userItem){
     Scanner inReader = new Scanner(System.in);
     
     
     int i = 0, playerHeal = 0;
     
     if (userItem.toLowerCase().equals("healingpotion")){
-        playerHeal = 0;
+        playerHeal = bagName.indexOf("healingPotion");
     }
-    else if (userItem.toLowerCase().equals("magicpotion")){
-        playerHeal = 2;
+    else if (userItem.toLowerCase().equals("manapotion")){
+        playerHeal = bagName.indexOf("manaPotion"); 
     }
     else{
         playerHeal = -1;
     }
-    while(bagName[i] != null){
-        if(userItem.toLowerCase().equals(bagName[i].toLowerCase())){
-            playerStat[playerHeal] += bagStat[i];
-            break;            
-        }
-        i += 1;
-    }
+    
+    
+    
+    
 }
 
-public static void looting(int[] playerStats, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> physName, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost){
+public static void looting(int[] playerStats, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> phyNames, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost, ArrayList<Integer> bagStat, ArrayList<String> bagName){
     Random rand = new Random();
     Scanner input = new Scanner(System.in);
-    int randNum = rand.nextInt(2);
+    int randNum = rand.nextInt(3);
     String choice;
+    int phySize = rand.nextInt(phyNames.size());
+    int magSize = rand.nextInt(magNames.size());
+    int potionSize = rand.nextInt(potionName.size());
+    int bagAmount = 0;
+    
     
     if(randNum == 0){
-        randNum = rand.nextInt(potionName.size());
-    }else if(randNum == 1){
-        randNum = rand.nextInt(physName.size());
-        
-        System.out.println("You have found a " + physName.get(randNum) + " on the ground, that does " + physDam.get(randNum) + ". Will you replace your current physical weapon with it?\n(Yes or No)");
+        System.out.println("You have found a " + potionName.get(potionSize) + " on the ground, it will give you " + potionStat.get(potionSize) + " in that area. Would you like to store it in your bag? ");
         choice = input.next();
-        
-        if(choice.toLowerCase().charAt(0) == 'y'){
-            playerStats[5] = magDam.get(randNum);
+        if(choice.toLowerCase().charAt(0) == 'y' && bagName.size() < 10){
+            
+            System.out.println("You have chosen to keep the item.");
         }
-    }else{
-        randNum = rand.nextInt(magNames.size());
+        else{
+            System.out.println("You have chosen to get rid of the item");   
+        }
+    }
+    else if(randNum == 1){
         
-        System.out.println("You have found a " + magNames.get(randNum) + " on the ground, that does " + magDam.get(randNum) + " that costs " + magCost.get(randNum) + ". Will you replace your current magic weapon with it?\n(Yes or No)");
+        System.out.println("You have found a " + phyNames.get(phySize) + " on the ground, that does " + physDam.get(phySize) + ". Will you replace your current physical weapon with it?\n(Yes or No)");
         choice = input.next();
         
         if(choice.toLowerCase().charAt(0) == 'y'){
-            playerStats[6] = magDam.get(randNum);
-            playerStats[7] = magCost.get(randNum);
+            playerStats[5] = physDam.get(phySize);
+        }
+    }else if (randNum == 2){
+        
+        System.out.println("You have found a " + magNames.get(magSize) + " on the ground, that does " + magDam.get(magSize) + " that costs " + magCost.get(magSize) + ". Will you replace your current magic weapon with it?\n(Yes or No)");
+        choice = input.next();
+        
+        if(choice.toLowerCase().charAt(0) == 'y'){
+            playerStats[6] = magDam.get(magSize);
+            playerStats[7] = magCost.get(magSize);
         }
     }
 }
 
-public static void checkBag(String[] bagItemNames, int[] bagItemStat){
+public static void checkBag(ArrayList<String> bagItemNames, ArrayList<Integer> bagItemStat){
     int i = 0;
     
     System.out.println();
     
-    for(i = 0; i < bagItemNames.length; i++){
-        if(bagItemNames[i] != null){
-            System.out.println(i+1 + "." + bagItemNames[i] + "\t" + bagItemStat[i]);
-        }
-    }  
+    for(i = 0; i < bagItemNames.size(); i++){
+        System.out.println(bagItemNames.get(i) + "\t" + bagItemStat.get(i));
+    }
 }
+
 
 public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] playerStats, String phyName, String magName){
     Scanner inReader = new Scanner(System.in);
@@ -84,9 +92,14 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
     int orgEnemyHealth = enemyHealth;
     int magicAtk = -(3 * enemyDef/4) + playerStats[6] ;
     int phyAtk =  -(enemyDef/2) + playerStats[5];
+    int playerHit = -(playerStats[1]/2) + enemyAtk;
     
-    System.out.print("Would you like physical or magic?");
-    
+    if(playerStats[2] >= playerStats[7]){
+        System.out.print("Would you like physical or magic?");
+    }
+    else{
+        System.out.print("Currently you don't have enough mana to use Magic.");
+    }
     choice = inReader.next();
     boolean validChoice = false;
 
@@ -103,7 +116,7 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
     }
  
     if (((choice.toUpperCase()).equals("PHYSICAL"))){
-        System.out.printf("You currently have a %s, which will hit for, %d", phyName, playerStats[5]);
+        System.out.printf("You currently have a %s, which will hit for, %d\n", phyName, playerStats[5]);
         enemyHealth -= phyAtk;
         
         if(enemyHealth >= orgEnemyHealth){
@@ -111,9 +124,9 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
             System.out.println("Your attack did no damage :(");
         }
     }
-    else if (((choice.toUpperCase()).equals("MAGIC"))){
-        System.out.printf("You currently have a %s, which will hit for, %d", magName, playerStats[6]);
-        playerStats[2] -= 3;
+    else if (((choice.toUpperCase()).equals("MAGIC")) && playerStats[2] >= playerStats[7]){
+        System.out.printf("You currently have a %s, which will hit for, %d\n", magName, playerStats[6]);
+        playerStats[2] -= playerStats[7];
         enemyHealth -= magicAtk;
         
         if(enemyHealth >= orgEnemyHealth){
@@ -121,17 +134,32 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
               System.out.println("Your attack did no damage :(");
         }
     }
+    else{
+        System.out.println("You try your darenest to cast magic but nothing comes out and leaves an opening for the enemy.");
+    }
+    
+    System.out.printf("The enemy swings and hits you for %d damage\n", enemyAtk);
+    if(playerHit <= 0){
+        System.out.println("The enemy couldn't break through the defense.");
+    }
+    else{
+        playerStats[0] -= playerHit;
+        System.out.printf("The enemy hit you for %d damage\n", playerHit);
+    }
+    
     return enemyHealth;
 }
 
 
-public static void boss(int bossHealth, int bossDef, int[] playerStats, int[] bagStats, String[] bagName, String phyName, String magName){
+public static void boss(int bossHealth, int bossDef, int[] playerStats, ArrayList<Integer> bagStats, ArrayList<String> bagName, String phyName, String magName){
     Random rand = new Random();
     
     int bossAtk = rand.nextInt(24,30);
     Scanner inReader = new Scanner(System.in);
     
     String choice;
+    System.out.printf("You have encountered a boss with %d attack and %d defense\n", bossAtk, bossDef);
+    System.out.println("Would you like to do?\nFight, Bag, or Run.");
     choice = inReader.next(); //not sure why choice needs to be here, might be a bug later on
     boolean validChoice = false;
     while (validChoice == false){
@@ -148,19 +176,35 @@ public static void boss(int bossHealth, int bossDef, int[] playerStats, int[] ba
         if((choice.toUpperCase()).equals("BAG")){
             checkBag(bagName, bagStats); 
             System.out.println("Would you like to use anything? (type none for nothing.)");
-            String bag = inReader.next();
+            String userItem = inReader.next();
             while(true){
-                if ((bag.toUpperCase().equals("MAGICPOTION")) || (bag.toUpperCase().equals("HEALTHPOTION"))){
+                if ((userItem.toUpperCase().equals("MAGICPOTION")) || (userItem.toUpperCase().equals("HEALTHPOTION")) || (userItem.toUpperCase().equals("NONE"))){
                     break;    
                 }
                 else{
                     System.out.println("That is not a vaild answer.");
-                    bag = inReader.next();
+                    userItem = inReader.next();
                 }
-            }            
-        }
+            }      
+            heal(playerStats, bagName, bagStats, userItem);
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            choice = inReader.next();
+            }     
+        
         else if ((choice.toUpperCase()).equals("FIGHT")){
             bossHealth = battle(bossHealth, bossAtk, bossDef, playerStats, phyName, magName);
+            System.out.println("The monster is down to " + bossHealth);
+                
+            System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            if(bossHealth <= 0){
+                    System.out.println("You have beaten the Boss!");
+                    break;
+            }
+            else if( playerStats[0] <= 0){
+                    System.out.println("You have died.");
+                    break;
+            }
+            choice = inReader.next();
         }
     }
 }
@@ -169,8 +213,8 @@ public static void boss(int bossHealth, int bossDef, int[] playerStats, int[] ba
 
 
 
-public static void encounter(int[][] enemies, String[] nameMonster, int[] playerStats, String[] bagName, int[] bagStats, String phyName, String magName){
-    System.out.println("Encounter triggered");
+public static void encounter(int[][] enemies, String[] nameMonster, int[] playerStats, ArrayList<String> bagName, ArrayList<Integer> bagStats, String phyName, String magName){
+    //System.out.println("Encounter triggered");
     Random rand = new Random();
     Scanner inReader = new Scanner(System.in);
     int randomNum = rand.nextInt(0,2); // selects on of the three enemies
@@ -220,6 +264,14 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
             System.out.println("The monster is down to " + monsterHealth);
             
             System.out.println("\nWould you like to do?\nFight, Bag, or Run.");
+            if( monsterHealth <= 0){
+                System.out.println("You have beaten the monster!");
+                break;
+            }
+            else if( playerStats[0] <= 0){
+                System.out.println("You have died.");
+                break;
+            }
             choice = inReader.next();
         }
         else if ((choice.toUpperCase()).equals("RUN")){
@@ -230,7 +282,6 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
             }
             else{
                 System.out.println("You didn't get away.\n");
-                System.out.println("Would you like to do?\nFight, Bag, or Run.");
                 System.out.println("Would you like to do?\nFight, Bag, or Run.");
                 choice = inReader.next();
             }
@@ -274,7 +325,7 @@ public static void pathChoosing(char[] pathChoices, Scanner scnr){
     System.out.println("You have chosen the " + userPath + " path, let us begin");
 }
 
-public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, int[] bagStats, String[] bagName, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> physName, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost){
+public static int campainStart(int bossKillCount, int[][] enemies, String[] enemyName, int[] playerStats, ArrayList<Integer> bagStats, ArrayList<String> bagName, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> physName, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost){
     int roomLength = 100;
     int maxEncounter = 10;
     int stepCount = 0;
@@ -300,9 +351,9 @@ public static int campainStart(int bossKillCount, int[][] enemies, String[] enem
         maxRuns += (maxRuns * 3/4.0) * bossKillCount; 
     }
     
-    encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
-    lootTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
-    System.out.println("Encounter tile: " + encounterTile);
+    encounterTile = rand.nextInt(1,roomLength - stepCount + 1) + stepCount;
+    lootTile = rand.nextInt(1,roomLength - stepCount + 1) + stepCount;
+    //System.out.println("Encounter tile: " + encounterTile);
     
     while(stepCount < roomLength){
         if (encounterTile == stepCount && encounterCount < maxEncounter){
@@ -313,20 +364,21 @@ public static int campainStart(int bossKillCount, int[][] enemies, String[] enem
             
             encounterCount += 1;
             encounterTile = rand.nextInt(roomLength - stepCount + 1) + stepCount;
-            System.out.println("encounterTile: " + encounterTile);
+            //System.out.println("encounterTile: " + encounterTile);
         }
         
         if(lootTile == stepCount && lootCount < maxLoots){
-            looting(playerStats, phyName, magName, potionName, potionStat, physName, physDam, magNames, magDam, magCost);
+            looting(playerStats, phyName, magName, potionName, potionStat, physName, physDam, magNames, magDam, magCost, bagStats, bagName);
         }
-        
         stepCount += 1;
         if(playerStats[0] <= 0 ){
             return 0;
         }  
-        
-        boss(bossHealth, bossDef, playerStats, bagStats, bagName, phyName, magName);
     }
+    boss(bossHealth, bossDef, playerStats, bagStats, bagName, phyName, magName);
+    if(playerStats[0] <= 0 ){
+        return 0;
+    }  
     return 1;
 }
 
@@ -350,14 +402,16 @@ public static void main(String args[]) throws IOException{
     Scanner scnr = new Scanner(System.in);
     int i;
     final int BAG_SIZE = 10;
-    String[] bagItemNames = new String[BAG_SIZE];
-    int[] bagItemStat = new int[BAG_SIZE];
+    //String[] bagItemNames = new String[BAG_SIZE];
+    //int[] bagItemStat = new int[BAG_SIZE];
     int health, defense, mana, gold, bossKillCount;
     int currentPhyDam, currentMagDam;
     String currentPhyName, currentMagName;
     char[] pathChoices = new char[3];
     String userPath;
     
+    ArrayList<Integer> bagItemStats = new ArrayList<Integer>();
+    ArrayList<String> bagItemNames = new ArrayList<String>();
     ArrayList<String> potionName = new ArrayList<String>();
     ArrayList<Integer> potionStat = new ArrayList<Integer>();
     ArrayList<String> physicalName = new ArrayList<String>();
@@ -422,12 +476,11 @@ public static void main(String args[]) throws IOException{
     System.out.println("As you travel this path, you might run into many things");
     System.out.printf("On your person you have a %s for physical damage, and %s for magic damage.\nPhysical damage is weaker overall, but hits more in defense, Magic damage does more overall, but hits weaker in defense.\n",currentPhyName, currentMagName);
     
-    
-    bagItemNames[0] = potionName.get(0);
-    bagItemNames[1] = potionName.get(1);
+    bagItemNames.add(potionName.get(0));
+    bagItemNames.add(potionName.get(1));
 
-    bagItemStat[0] = potionStat.get(0);
-    bagItemStat[1] = potionStat.get(1);
+    bagItemStats.add(potionStat.get(0));
+    bagItemStats.add(potionStat.get(1));
     
     //Health, defense, mana, gold, runLimit, physical, magic damage, and magic cost
     playerStats[0] = 50;
@@ -442,7 +495,7 @@ public static void main(String args[]) throws IOException{
     
     
     while (bossKillCount < 3){
-        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStat, bagItemNames, currentPhyName, currentMagName, potionName, potionStat, physicalName, physicalStat, manaName, manaStat, manaCost);
+        bossKillCount += campainStart(bossKillCount, enemiesStats, enemiesName, playerStats, bagItemStats, bagItemNames, currentPhyName, currentMagName, potionName, potionStat, physicalName, physicalStat, manaName, manaStat, manaCost);
         if (playerStats[0] <= 0){
             System.out.println("You have failed to kill all three bosses and the final boss.\n You have been slain.");
             break;
