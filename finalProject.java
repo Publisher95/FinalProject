@@ -26,10 +26,6 @@ public static void heal(int[] playerStat, ArrayList<String> bagName, ArrayList<I
     else{
         playerHeal = -1;
     }
-    
-    
-    
-    
 }
 
 public static void looting(int[] playerStats, String phyName, String magName, ArrayList<String> potionName, ArrayList<Integer> potionStat, ArrayList<String> phyNames, ArrayList<Integer> physDam, ArrayList<String> magNames, ArrayList<Integer> magDam, ArrayList<Integer> magCost, ArrayList<Integer> bagStat, ArrayList<String> bagName){
@@ -145,6 +141,7 @@ public static int battle(int enemyHealth, int enemyAtk, int enemyDef, int[] play
     else{
         playerStats[0] -= playerHit;
         System.out.printf("The enemy hit you for %d damage\n", playerHit);
+        System.out.println("Your health is at " + playerStats[0] + " and mana is at " + playerStats[7]);
     }
     
     return enemyHealth;
