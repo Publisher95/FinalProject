@@ -9,7 +9,7 @@ import java.util.Random;
  *  We are going make video game 
  * @author Talmage McGehee and Micheal Gavina
  */
-public class finalProject{
+public class GavinaMcGeheefinalProject{
 
 public static void heal(int[] playerStat, ArrayList<String> bagName, ArrayList<Integer> bagStat, String userItem){
     Scanner inReader = new Scanner(System.in);
@@ -19,9 +19,15 @@ public static void heal(int[] playerStat, ArrayList<String> bagName, ArrayList<I
     
     if (userItem.toLowerCase().equals("healingpotion")){
         playerHeal = bagName.indexOf("healingPotion");
+        playerStat[0] += bagStat.get(playerHeal);
+        bagStat.remove(playerHeal);
+        bagName.remove(playerHeal);
     }
     else if (userItem.toLowerCase().equals("manapotion")){
         playerHeal = bagName.indexOf("manaPotion"); 
+        playerStat[2] += bagStat.get(playerHeal);
+        bagStat.remove(playerHeal);
+        bagName.remove(playerHeal);
     }
     else{
         playerHeal = -1;
@@ -244,7 +250,7 @@ public static void encounter(int[][] enemies, String[] nameMonster, int[] player
             System.out.println("Would you like to use any items? (Type none for no items)");
             String userItem = inReader.next();
             while(true){
-                if ((userItem.toUpperCase().equals("MAGICPOTION")) || (userItem.toUpperCase().equals("HEALTHPOTION")) || (userItem.toUpperCase().equals("NONE"))){
+                if ((userItem.toUpperCase().equals("MANAPOTION")) || (userItem.toUpperCase().equals("HEALTHPOTION")) || (userItem.toUpperCase().equals("NONE"))){
                     break;    
                 }
                 else{
